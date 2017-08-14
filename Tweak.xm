@@ -58,9 +58,13 @@ long getBytesTotal()
 			if (ifa->ifa_data == 0) {
 				continue;
 			}
-			struct if_data *if_data = (struct if_data *)ifa->ifa_data;
-			iBytes += if_data->ifi_ibytes;
-			oBytes += if_data->ifi_obytes;
+			if (strstr(ifa->ifa_name, "pdp") != NULL || strstr(ifa->ifa_name, "en") != NULL)
+			{
+				struct if_data *if_data = (struct if_data *)ifa->ifa_data;
+				NSLog(@"[getInterfaceBytes-%s]%u,%u", ifa->ifa_name, if_data->ifi_ibytes, if_data->ifi_obytes);
+				iBytes += if_data->ifi_ibytes;
+				oBytes += if_data->ifi_obytes;
+			}
 		}
 		freeifaddrs(ifa_list);
 		return iBytes + oBytes;
